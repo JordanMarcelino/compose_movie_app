@@ -1,6 +1,12 @@
 package com.example.compose_movie.ui.theme
+
 import androidx.compose.ui.graphics.Color
 
+val ShimmerColorShades = listOf(
+    Color.LightGray.copy(0.9f),
+    Color.LightGray.copy(0.2f),
+    Color.LightGray.copy(0.9f)
+)
 
 val md_theme_light_primary = Color(0xFF00e627)
 val md_theme_light_onPrimary = Color(0xFF003a02)

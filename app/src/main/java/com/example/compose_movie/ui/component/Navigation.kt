@@ -28,7 +28,7 @@ fun Navigation() {
             composable(
                 route = NavigateTo.Home().navigation,
             ) {
-                HomeScreen()
+                HomeScreen(navController)
             }
             composable(
                 route = NavigateTo.Search().navigation,
