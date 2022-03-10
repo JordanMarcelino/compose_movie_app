@@ -19,6 +19,8 @@ class MovieViewModel @Inject constructor(
     private val getPopularMovieUseCase: GetPopularMovieUseCase
 ) : AndroidViewModel(app){
 
+
+
     @RequiresApi(Build.VERSION_CODES.M)
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager =
