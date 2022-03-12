@@ -1,6 +1,5 @@
-package com.example.compose_movie.ui.component
+package com.example.compose_movie.ui.component.navgraph
 
-import androidx.compose.material.icons.Icons
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -8,5 +7,5 @@ data class BottomNavItem(
     val icon: ImageVector,
     val activeColor: Color,
     val inactiveColor: Color,
-    val destination: NavigateTo
+    val destination: Screen
 )

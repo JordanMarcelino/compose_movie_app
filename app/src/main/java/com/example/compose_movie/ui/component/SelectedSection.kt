@@ -23,17 +23,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.compose_movie.data.model.Result
 import com.example.compose_movie.data.util.Resource
+import com.example.compose_movie.ui.component.navgraph.Screen
 import com.example.compose_movie.ui.theme.ShimmerColorShades
 import com.example.compose_movie.ui.viewmodel.MovieViewModel
+import java.net.URLEncoder
 
 @Composable
 fun MovieSection(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    navController: NavHostController,
     movieViewModel: MovieViewModel = hiltViewModel(),
 ) {
 
@@ -62,8 +65,15 @@ fun MovieSection(
                         movieViewModel.loadPopularMovie()
                     }
                 }
-                MovieCard(movie = movies[it]) {
-
+                MovieCard(movie = movies[it]) { res ->
+                    val path = Screen.MovieDetail.navigateDetailMovieWithArgs(
+                        url = URLEncoder.encode(res.posterPath, "utf-8"),
+                        title = res.title!!,
+                        rate = res.voteAverage.toString(),
+                        date = res.releaseDate.toString(),
+                        adult = res.adult!!
+                    )
+                    navController.navigate(path)
                 }
                 Spacer(modifier = Modifier.width(32.dp))
             }
@@ -99,7 +109,7 @@ fun MovieSection(
 fun MovieCard(
     movie: Result,
     modifier: Modifier = Modifier,
-    onClicked: () -> Unit
+    onClicked: (Result) -> Unit
 ) {
     Card(
         elevation = 8.dp,
@@ -107,7 +117,7 @@ fun MovieCard(
             .fillMaxSize()
             .clip(RoundedCornerShape(18.dp))
             .clickable {
-                onClicked()
+                onClicked(movie)
             }
     ) {
         SubcomposeAsyncImage(

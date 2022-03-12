@@ -1,4 +1,4 @@
-package com.example.compose_movie.ui.component
+package com.example.compose_movie.ui.component.navgraph
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,9 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
@@ -27,22 +27,22 @@ fun BottomNavigationView(
             icon = Icons.Default.Home,
             activeColor = MaterialTheme.colors.primary,
             inactiveColor = MaterialTheme.colors.onPrimary,
-            destination = NavigateTo.Home()
+            destination = Screen.Home
         ),
         BottomNavItem(
             icon = Icons.Default.Search,
             activeColor = MaterialTheme.colors.primary,
             inactiveColor = MaterialTheme.colors.onPrimary,
-            destination = NavigateTo.Search()
+            destination = Screen.Search
         ),
         BottomNavItem(
             icon = Icons.Default.Favorite,
             activeColor = MaterialTheme.colors.primary,
             inactiveColor = MaterialTheme.colors.onPrimary,
-            destination = NavigateTo.Favourite()
+            destination = Screen.Favourite
         )
     ),
-    navController: NavController,
+    navController: NavHostController,
     onClicked: (BottomNavItem) -> Unit
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()

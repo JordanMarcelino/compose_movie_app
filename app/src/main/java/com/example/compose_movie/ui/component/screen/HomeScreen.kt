@@ -1,4 +1,4 @@
-package com.example.compose_movie.ui.component
+package com.example.compose_movie.ui.component.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,19 +10,20 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.compose_movie.data.model.Result
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
+import com.example.compose_movie.ui.component.MovieSection
 import com.example.compose_movie.ui.viewmodel.MovieViewModel
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
+    navController: NavHostController,
     movieViewModel: MovieViewModel = hiltViewModel()
 ) {
 
@@ -59,7 +60,7 @@ fun HomeScreen(
 
 @Composable
 fun TabSection(
-    navController: NavController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     onTabSelected: (index: Int) -> Unit
 ) {
