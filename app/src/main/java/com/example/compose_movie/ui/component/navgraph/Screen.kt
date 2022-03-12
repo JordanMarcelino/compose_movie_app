@@ -12,9 +12,10 @@ sealed class Screen(val navigation : String){
             rate : String,
             date : String,
             overview : String,
+            id : Int,
             adult : Boolean
         ) : String{
-            return "${this.navigation}/$title/$overview/$rate/$date/$adult/$url"
+            return "${this.navigation}/$title/$id/$overview/$rate/$date/$adult/$url"
         }
     }
 }

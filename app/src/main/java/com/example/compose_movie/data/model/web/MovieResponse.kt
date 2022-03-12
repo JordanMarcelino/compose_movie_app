@@ -1,4 +1,4 @@
-package com.example.compose_movie.data.model
+package com.example.compose_movie.data.model.web
 
 
 import com.google.gson.annotations.SerializedName

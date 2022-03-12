@@ -1,10 +1,11 @@
-package com.example.compose_movie.data.model
-
+package com.example.compose_movie.data.model.web
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class Result(
+    @SerializedName("id")
+    val id: Int?,
     @SerializedName("adult")
     val adult: Boolean?,
     @SerializedName("backdrop_path")

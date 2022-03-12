@@ -49,7 +49,7 @@ fun Navigation() {
                 FavouriteScreen()
             }
             composable(
-                route = "${Screen.MovieDetail.navigation}/{title}/{overview}/{rate}/{date}/{adult}/{url}",
+                route = "${Screen.MovieDetail.navigation}/{title}/{id}/{overview}/{rate}/{date}/{adult}/{url}",
                 arguments = listOf(
                     navArgument("url") {
                         type = NavType.StringType
@@ -68,6 +68,9 @@ fun Navigation() {
                     },
                     navArgument("overview") {
                         type = NavType.StringType
+                    },
+                    navArgument("id") {
+                        type = NavType.IntType
                     }
                 )
             ) {
@@ -90,6 +93,9 @@ fun Navigation() {
                 val overview = remember {
                     bundle.getString("overview")
                 }
+                val id = remember {
+                    bundle.getInt("id")
+                }
                 MovieDetails(
                     navController = navController,
                     url = url.toString(),
@@ -97,6 +103,7 @@ fun Navigation() {
                     rate = rate.toString(),
                     date = date.toString(),
                     overview = overview.toString(),
+                    id = id,
                     adult = adult
                 )
             }

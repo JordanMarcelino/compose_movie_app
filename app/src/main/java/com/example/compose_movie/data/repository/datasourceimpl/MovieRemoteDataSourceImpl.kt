@@ -1,7 +1,7 @@
 package com.example.compose_movie.data.repository.datasourceimpl
 
 import com.example.compose_movie.data.api.ApiService
-import com.example.compose_movie.data.model.MovieResponse
+import com.example.compose_movie.data.model.web.MovieResponse
 import com.example.compose_movie.data.repository.datasource.MovieRemoteDataSource
 import retrofit2.Response
 

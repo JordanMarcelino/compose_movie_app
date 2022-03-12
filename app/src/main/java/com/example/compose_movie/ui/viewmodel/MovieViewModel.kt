@@ -8,9 +8,13 @@ import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.compose_movie.data.model.Result
+import com.example.compose_movie.data.model.domain.Movie
+import com.example.compose_movie.data.model.web.Result
 import com.example.compose_movie.data.util.Resource
+import com.example.compose_movie.domain.usecase.DeleteMovieUseCase
 import com.example.compose_movie.domain.usecase.GetPopularMovieUseCase
+import com.example.compose_movie.domain.usecase.GetSavedMovieUseCase
+import com.example.compose_movie.domain.usecase.SaveMovieUseCase
 import com.example.compose_movie.ui.App
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -19,7 +23,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieViewModel @Inject constructor(
     private val app : Application,
-    private val getPopularMovieUseCase: GetPopularMovieUseCase
+    private val getPopularMovieUseCase: GetPopularMovieUseCase,
+    private val saveMovieUseCase: SaveMovieUseCase,
+    private val deleteMovieUseCase: DeleteMovieUseCase,
+    private val getSavedMovieUseCase: GetSavedMovieUseCase
 ) : AndroidViewModel(app){
 
     private val movies = mutableStateOf<List<Result>>(listOf())
@@ -60,6 +67,14 @@ class MovieViewModel @Inject constructor(
         }catch (e : Exception){
             currentState.value = Resource.Error(e.message.toString())
         }
+    }
+
+    fun saveMovie(movie : Movie) = viewModelScope.launch {
+        saveMovieUseCase.execute(movie)
+    }
+
+    fun deleteMovie(movie : Movie) = viewModelScope.launch {
+        deleteMovieUseCase.execute(movie)
     }
 
     private fun isNetworkAvailable(): Boolean {

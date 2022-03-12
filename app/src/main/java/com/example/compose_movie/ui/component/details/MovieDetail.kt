@@ -1,16 +1,16 @@
 package com.example.compose_movie.ui.component.details
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.util.Log
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,10 +22,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.example.compose_movie.data.model.domain.Movie
+import com.example.compose_movie.ui.viewmodel.MovieViewModel
+import kotlinx.coroutines.launch
 import java.net.URLDecoder
 
 @Composable
@@ -36,6 +40,7 @@ fun MovieDetails(
     rate: String,
     date: String,
     overview: String,
+    id: Int,
     adult: Boolean
 ) {
     val scrollState = rememberScrollState()
@@ -81,7 +86,14 @@ fun MovieDetails(
                 navController,
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .offset(16.dp, 16.dp)
+                    .offset(16.dp, 16.dp),
+                url = url,
+                title = title,
+                rate = rate,
+                date = date,
+                overview = overview,
+                id = id,
+                adult = adult
             )
         }
     }
@@ -91,8 +103,21 @@ fun MovieDetails(
 @Composable
 fun TopSection(
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    url: String,
+    title: String,
+    rate: String,
+    date: String,
+    overview: String,
+    id: Int,
+    adult: Boolean,
+    movieViewModel: MovieViewModel = hiltViewModel(),
 ) {
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember {
+        SnackbarHostState()
+    }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -130,7 +155,31 @@ fun TopSection(
                         0xFF001219
                     )
                 )
-                .padding(vertical = 8.dp),
+                .padding(vertical = 8.dp)
+                .clickable {
+                    val movie = Movie(
+                        url = url,
+                        title = title,
+                        rate = rate,
+                        date = date,
+                        overview = overview,
+                        id = id,
+                        adult = adult
+                    )
+                    movieViewModel.saveMovie(
+                        movie
+                    )
+                    scope.launch {
+                        val snackBarResult = snackBarHostState.showSnackbar(
+                            "Success adding movie to favourite",
+                            duration = SnackbarDuration.Short,
+                            actionLabel = "Undo"
+                        )
+                        if (snackBarResult == SnackbarResult.ActionPerformed) {
+                            movieViewModel.deleteMovie(movie)
+                        }
+                    }
+                },
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -139,6 +188,35 @@ fun TopSection(
                 tint = Color.Red,
                 modifier = Modifier.size(36.dp)
             )
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        SnackbarHost(
+            hostState = snackBarHostState,
+            modifier = Modifier.align(Alignment.Center)
+        ) { snackbarData ->
+            Card(
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(2.dp, Color.White),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .wrapContentSize()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    Text(text = snackbarData.message)
+                    Button(onClick = { /*TODO*/ }) {
+                        Text(text = snackbarData.actionLabel.toString())
+                    }
+                }
+            }
+            Log.i("MYTAG", snackbarData.message)
         }
     }
 }

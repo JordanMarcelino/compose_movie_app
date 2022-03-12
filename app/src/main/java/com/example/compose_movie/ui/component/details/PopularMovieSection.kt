@@ -24,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.example.compose_movie.data.model.Result
+import com.example.compose_movie.data.model.web.Result
 import com.example.compose_movie.data.util.Resource
 import com.example.compose_movie.ui.component.navgraph.Screen
 import com.example.compose_movie.ui.theme.ShimmerColorShades
@@ -111,6 +111,7 @@ fun PopularMovieRow(
                     rate = res.voteAverage.toString(),
                     date = res.releaseDate.toString(),
                     overview = res.overview.toString(),
+                    id = res.id.toString().toInt(),
                     adult = res.adult!!
                 )
                 navController.navigate(path)

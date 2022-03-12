@@ -1,7 +1,7 @@
 package com.example.compose_movie.data.api
 
 import com.example.compose_movie.BuildConfig
-import com.example.compose_movie.data.model.MovieResponse
+import com.example.compose_movie.data.model.web.MovieResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

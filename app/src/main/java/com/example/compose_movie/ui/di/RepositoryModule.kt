@@ -1,6 +1,7 @@
 package com.example.compose_movie.ui.di
 
 import com.example.compose_movie.data.repository.MovieRepositoryImpl
+import com.example.compose_movie.data.repository.datasource.MovieLocalDataSource
 import com.example.compose_movie.data.repository.datasource.MovieRemoteDataSource
 import com.example.compose_movie.domain.repository.MovieRepository
 import dagger.Module
@@ -16,8 +17,10 @@ class RepositoryModule {
     @Singleton
     @Provides
     fun providesMovieRepository(
-        remoteDataSource: MovieRemoteDataSource
+        remoteDataSource: MovieRemoteDataSource,
+        localDataSource: MovieLocalDataSource
     ): MovieRepository = MovieRepositoryImpl(
-        remoteDataSource
+        remoteDataSource,
+        localDataSource
     )
 }
