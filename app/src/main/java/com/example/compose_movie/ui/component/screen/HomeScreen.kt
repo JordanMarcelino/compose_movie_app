@@ -15,10 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
-import com.example.compose_movie.ui.component.MovieSection
+import com.example.compose_movie.ui.component.details.MovieSection
 import com.example.compose_movie.ui.viewmodel.MovieViewModel
 
 @Composable

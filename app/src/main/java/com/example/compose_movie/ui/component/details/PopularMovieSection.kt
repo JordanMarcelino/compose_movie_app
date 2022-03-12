@@ -1,4 +1,4 @@
-package com.example.compose_movie.ui.component
+package com.example.compose_movie.ui.component.details
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -10,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
@@ -40,44 +38,15 @@ fun MovieSection(
     movieViewModel: MovieViewModel = hiltViewModel(),
 ) {
 
-    val movies by remember {
-        movieViewModel.movie
-    }
-
     val currentState by remember {
         movieViewModel.currentState
     }
 
-    val endReached by remember {
-        movieViewModel.endReached
-    }
-
     if (currentState is Resource.Success) {
-
-        LazyRow(
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            contentPadding = PaddingValues(8.dp)
-        ) {
-            items(movies.size) {
-                if (it >= movies.size - 1 && currentState !is Resource.Loading && !endReached) {
-                    LaunchedEffect(key1 = true) {
-                        movieViewModel.loadPopularMovie()
-                    }
-                }
-                MovieCard(movie = movies[it]) { res ->
-                    val path = Screen.MovieDetail.navigateDetailMovieWithArgs(
-                        url = URLEncoder.encode(res.posterPath, "utf-8"),
-                        title = res.title!!,
-                        rate = res.voteAverage.toString(),
-                        date = res.releaseDate.toString(),
-                        adult = res.adult!!
-                    )
-                    navController.navigate(path)
-                }
-                Spacer(modifier = Modifier.width(32.dp))
-            }
-        }
+        PopularMovieRow(
+            navController = navController,
+            modifier = modifier
+        )
     } else if (currentState is Resource.Error) {
         Box(
             modifier = Modifier
@@ -102,6 +71,52 @@ fun MovieSection(
             ShimmerAnimation()
         }
 
+    }
+}
+
+@Composable
+fun PopularMovieRow(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    movieViewModel: MovieViewModel = hiltViewModel()
+) {
+
+    val movies by remember {
+        movieViewModel.movie
+    }
+
+    val endReached by remember {
+        movieViewModel.endReached
+    }
+
+    val currentState by remember {
+        movieViewModel.currentState
+    }
+
+    LazyRow(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        contentPadding = PaddingValues(8.dp)
+    ) {
+        items(movies.size) {
+            if (it >= movies.size - 1 && currentState !is Resource.Loading && !endReached) {
+                LaunchedEffect(key1 = true) {
+                    movieViewModel.loadPopularMovie()
+                }
+            }
+            MovieCard(movie = movies[it]) { res ->
+                val path = Screen.MovieDetail.navigateDetailMovieWithArgs(
+                    url = URLEncoder.encode(res.posterPath, "utf-8"),
+                    title = res.title.toString(),
+                    rate = res.voteAverage.toString(),
+                    date = res.releaseDate.toString(),
+                    overview = res.overview.toString(),
+                    adult = res.adult!!
+                )
+                navController.navigate(path)
+            }
+            Spacer(modifier = Modifier.width(32.dp))
+        }
     }
 }
 

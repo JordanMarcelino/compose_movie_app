@@ -1,4 +1,4 @@
-package com.example.compose_movie.ui.component
+package com.example.compose_movie.ui.component.details
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,10 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.example.compose_movie.data.model.Result
-import com.example.compose_movie.ui.component.navgraph.BottomNavigationView
 import java.net.URLDecoder
-import java.net.URLEncoder
 
 @Composable
 fun MovieDetails(
@@ -37,6 +35,7 @@ fun MovieDetails(
     title: String,
     rate: String,
     date: String,
+    overview: String,
     adult: Boolean
 ) {
     val scrollState = rememberScrollState()
@@ -48,13 +47,36 @@ fun MovieDetails(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            MovieImage(
-                url = url,
-                title = title,
-                rate = rate,
-                date = date,
-                adult = adult
-            )
+            Column(modifier = Modifier.fillMaxSize()) {
+                MovieImage(
+                    url = url,
+                    title = title,
+                    rate = rate,
+                    date = date,
+                    adult = adult
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = overview,
+                    fontSize = 24.sp,
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+                Text(
+                    text = "Other movie",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                PopularMovieRow(
+                    navController = navController,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                Spacer(modifier = Modifier.height(100.dp))
+            }
             TopSection(
                 navController,
                 modifier = Modifier
@@ -71,28 +93,54 @@ fun TopSection(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .fillMaxWidth(0.1f)
-            .fillMaxHeight(0.08f)
-            .background(
-                Color(
-                    0xFF0a9396
-                ).copy(alpha = 0.55f)
-            )
-            .clickable {
-                navController.popBackStack()
-            },
-        contentAlignment = Alignment.Center
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = "Back",
-            tint = Color.White
-        )
+        Box(
+            modifier = modifier
+                .clip(RoundedCornerShape(10.dp))
+                .fillMaxWidth(0.1f)
+                .fillMaxHeight(0.08f)
+                .background(
+                    Color(
+                        0xFF0a9396
+                    ).copy(alpha = 0.55f)
+                )
+                .clickable {
+                    navController.popBackStack()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back",
+                tint = Color.White
+            )
+        }
+        Box(
+            modifier = modifier
+                .offset((-24).dp)
+                .clip(RoundedCornerShape(10.dp))
+                .fillMaxWidth(0.2f)
+                .fillMaxHeight(0.2f)
+                .background(
+                    Color(
+                        0xFF001219
+                    )
+                )
+                .padding(vertical = 8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = "Back",
+                tint = Color.Red,
+                modifier = Modifier.size(36.dp)
+            )
+        }
     }
-
 }
 
 @Composable
@@ -113,7 +161,9 @@ fun MovieImage(
                 .crossfade(true)
                 .build(),
             contentDescription = title,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
             contentScale = ContentScale.Crop,
             loading = {
                 CircularProgressIndicator(
@@ -127,6 +177,7 @@ fun MovieImage(
             modifier = Modifier
                 .height(500.dp)
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
