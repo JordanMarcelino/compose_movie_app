@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.compose_movie.ui.component.FavouriteScreen
+import com.example.compose_movie.ui.component.screen.FavouriteScreen
 import com.example.compose_movie.ui.component.SearchScreen
 import com.example.compose_movie.ui.component.screen.HomeScreen
 
@@ -44,7 +44,7 @@ fun Navigation() {
             composable(
                 route = Screen.Favourite.navigation,
             ) {
-                FavouriteScreen()
+                FavouriteScreen(navController)
             }
             movieDetail(navController)
             nowPlayingMovie(navController)

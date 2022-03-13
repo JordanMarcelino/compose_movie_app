@@ -113,20 +113,6 @@ fun TabSection(
                 fontWeight = FontWeight.Bold
             )
         }
-        Tab(
-            selected = indexSelected == 2,
-            onClick = {
-                indexSelected = 2
-                onTabSelected(2)
-            },
-        ) {
-            Text(
-                text = "Artist",
-                textAlign = TextAlign.Center,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
     }
 }
 
