@@ -10,17 +10,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.compose_movie.ui.component.details.FavoriteMovie
-import com.example.compose_movie.ui.component.details.NowPlayingMovie
-import com.example.compose_movie.ui.component.details.MovieSection
 import com.example.compose_movie.ui.component.tabsection.MovieTab
+import com.example.compose_movie.ui.component.tabsection.TvShowTab
 import com.example.compose_movie.ui.viewmodel.MovieViewModel
 
 @Composable
@@ -55,6 +52,9 @@ fun HomeScreen(
             when (index) {
                 0 -> {
                    MovieTab(navController = navController)
+                }
+                1 -> {
+                    TvShowTab(navController = navController)
                 }
             }
 

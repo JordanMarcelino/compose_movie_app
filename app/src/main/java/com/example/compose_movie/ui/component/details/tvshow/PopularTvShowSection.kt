@@ -1,49 +1,44 @@
-package com.example.compose_movie.ui.component.details
+package com.example.compose_movie.ui.component.details.tvshow
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.example.compose_movie.data.model.web.movie.Result
+import com.example.compose_movie.data.model.web.tvshow.Result
 import com.example.compose_movie.data.util.Resource
+import com.example.compose_movie.ui.component.details.movie.Retry
+import com.example.compose_movie.ui.component.details.movie.ShimmerAnimation
 import com.example.compose_movie.ui.component.navgraph.Screen
-import com.example.compose_movie.ui.theme.ShimmerColorShades
-import com.example.compose_movie.ui.viewmodel.MovieViewModel
+import com.example.compose_movie.ui.viewmodel.TvShowViewModel
 import java.net.URLEncoder
 
 @Composable
-fun MovieSection(
+fun TvShowSection(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    movieViewModel: MovieViewModel = hiltViewModel(),
+    tvShowViewModel: TvShowViewModel = hiltViewModel(),
 ) {
 
     val currentState by remember {
-        movieViewModel.currentState
+        tvShowViewModel.currentState
     }
 
     if (currentState is Resource.Success) {
-        PopularMovieRow(
+        PopularTvShowRow(
             navController = navController,
             modifier = modifier
         )
@@ -56,7 +51,7 @@ fun MovieSection(
         )
         {
             Retry(currentState.message.toString()) {
-                movieViewModel.loadPopularMovie()
+                tvShowViewModel.loadPopularTvShow()
             }
         }
     }
@@ -75,22 +70,22 @@ fun MovieSection(
 }
 
 @Composable
-fun PopularMovieRow(
+fun PopularTvShowRow(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    movieViewModel: MovieViewModel = hiltViewModel()
+    tvShowViewModel: TvShowViewModel = hiltViewModel()
 ) {
 
-    val movies by remember {
-        movieViewModel.movie
+    val tvShow by remember {
+        tvShowViewModel.popularTvShow
     }
 
     val endReached by remember {
-        movieViewModel.endReached
+        tvShowViewModel.endReached
     }
 
     val currentState by remember {
-        movieViewModel.currentState
+        tvShowViewModel.currentState
     }
 
     LazyRow(
@@ -98,21 +93,20 @@ fun PopularMovieRow(
         verticalAlignment = Alignment.CenterVertically,
         contentPadding = PaddingValues(8.dp)
     ) {
-        items(movies.size) {
-            if (it >= movies.size - 1 && currentState !is Resource.Loading && !endReached) {
+        items(tvShow.size) {
+            if (it >= tvShow.size - 1 && currentState !is Resource.Loading && !endReached) {
                 LaunchedEffect(key1 = true) {
-                    movieViewModel.loadPopularMovie()
+                    tvShowViewModel.loadPopularTvShow()
                 }
             }
-            MovieCard(movie = movies[it]) { res ->
-                val path = Screen.MovieDetail.navigateDetailMovieWithArgs(
+            TvShowCard(tvShow = tvShow[it]) { res ->
+                val path = Screen.TvShowDetail.navigateDetailTvShowWithArgs(
                     url = URLEncoder.encode(res.posterPath, "utf-8"),
-                    title = res.title.toString(),
+                    title = res.name.toString(),
                     rate = res.voteAverage.toString(),
-                    date = res.releaseDate.toString(),
+                    date = res.firstAirDate.toString(),
                     overview = res.overview.toString(),
                     id = res.id.toString().toInt(),
-                    adult = res.adult!!
                 )
                 navController.navigate(path)
             }
@@ -122,8 +116,8 @@ fun PopularMovieRow(
 }
 
 @Composable
-fun MovieCard(
-    movie: Result,
+fun TvShowCard(
+    tvShow: Result,
     modifier: Modifier = Modifier,
     onClicked: (Result) -> Unit
 ) {
@@ -133,15 +127,15 @@ fun MovieCard(
             .fillMaxSize()
             .clip(RoundedCornerShape(18.dp))
             .clickable {
-                onClicked(movie)
+                onClicked(tvShow)
             }
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(movie.posterPath)
+                .data(tvShow.posterPath)
                 .crossfade(true)
                 .build(),
-            contentDescription = movie.originalTitle,
+            contentDescription = tvShow.name,
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(18.dp)),
@@ -150,60 +144,4 @@ fun MovieCard(
             }
         )
     }
-}
-
-@Composable
-fun Retry(
-    error: String,
-    onRetry: () -> Unit
-) {
-    Column(
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = error,
-            fontSize = 24.sp,
-            color = MaterialTheme.colors.error,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { onRetry() },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(text = "Retry")
-        }
-    }
-}
-
-@Composable
-fun ShimmerItem(
-    brush: Brush
-) {
-    Box(
-        modifier = Modifier
-            .height(200.dp)
-            .width(150.dp)
-            .background(brush = brush)
-            .clip(RoundedCornerShape(24.dp))
-    )
-}
-
-@Composable
-fun ShimmerAnimation() {
-    val transition = rememberInfiniteTransition()
-    val translateAnim by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            tween(durationMillis = 1000, easing = FastOutSlowInEasing),
-            RepeatMode.Reverse
-        )
-    )
-    val brush = Brush.linearGradient(
-        colors = ShimmerColorShades,
-        start = Offset(10f, 10f),
-        end = Offset(translateAnim, translateAnim)
-    )
-    ShimmerItem(brush = brush)
 }

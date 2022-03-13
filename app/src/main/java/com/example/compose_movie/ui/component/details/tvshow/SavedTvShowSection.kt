@@ -1,11 +1,12 @@
-package com.example.compose_movie.ui.component.details
+package com.example.compose_movie.ui.component.details.tvshow
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,25 +16,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.example.compose_movie.data.model.domain.Movie
-import com.example.compose_movie.data.util.Resource
+import com.example.compose_movie.data.model.domain.TvShow
+import com.example.compose_movie.ui.component.details.movie.ShimmerAnimation
 import com.example.compose_movie.ui.component.navgraph.Screen
 import com.example.compose_movie.ui.viewmodel.MovieViewModel
+import com.example.compose_movie.ui.viewmodel.TvShowViewModel
 import java.net.URLEncoder
 
 @Composable
-fun FavoriteMovie(
+fun FavoriteTvShow(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    SavedMovieRow(navController = navController, modifier = modifier)
+    SavedTvShowRow(navController = navController, modifier = modifier)
 }
 
 @Composable
-fun MovieSavedCard(
-    movie: Movie,
+fun TvShowSavedCard(
+    tvShow: TvShow,
     modifier: Modifier = Modifier,
-    onClicked: (Movie) -> Unit
+    onClicked: (TvShow) -> Unit
 ) {
     Card(
         elevation = 8.dp,
@@ -41,15 +43,15 @@ fun MovieSavedCard(
             .fillMaxSize()
             .clip(RoundedCornerShape(18.dp))
             .clickable {
-                onClicked(movie)
+                onClicked(tvShow)
             }
     ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(movie.url)
+                .data(tvShow.url)
                 .crossfade(true)
                 .build(),
-            contentDescription = movie.title,
+            contentDescription = tvShow.title,
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(18.dp)),
@@ -61,29 +63,28 @@ fun MovieSavedCard(
 }
 
 @Composable
-fun SavedMovieRow(
+fun SavedTvShowRow(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    movieViewModel: MovieViewModel = hiltViewModel()
+    tvShowViewModel: TvShowViewModel = hiltViewModel()
 ) {
 
-    val movies = movieViewModel.getSavedMovie().collectAsState(initial = listOf())
+    val tvShows = tvShowViewModel.getSavedTvShow().collectAsState(initial = listOf())
 
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         contentPadding = PaddingValues(8.dp)
     ) {
-        items(movies.value.size) {
-            MovieSavedCard(movie = movies.value[it]) { res ->
-                val path = Screen.MovieSavedDetail.navigateDetailMovieWithArgs(
+        items(tvShows.value.size) {
+            TvShowSavedCard(tvShow = tvShows.value[it]) { res ->
+                val path = Screen.TvShowSavedDetail.navigateDetailTvShowWithArgs(
                     url = URLEncoder.encode(res.url, "utf-8"),
                     title = res.title,
                     rate = res.rate,
                     date = res.date,
                     overview = res.overview,
-                    id = res.id.toString().toInt(),
-                    adult = res.adult
+                    id = res.id.toString().toInt()
                 )
                 navController.navigate(path)
             }

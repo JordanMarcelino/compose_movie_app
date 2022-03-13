@@ -11,6 +11,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.compose_movie.data.util.Resource
+import com.example.compose_movie.ui.component.details.movie.MovieCard
+import com.example.compose_movie.ui.component.details.movie.Retry
+import com.example.compose_movie.ui.component.details.movie.ShimmerAnimation
 import com.example.compose_movie.ui.component.navgraph.Screen
 import com.example.compose_movie.ui.viewmodel.MovieViewModel
 import java.net.URLEncoder

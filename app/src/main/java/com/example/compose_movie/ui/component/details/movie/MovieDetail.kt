@@ -1,4 +1,4 @@
-package com.example.compose_movie.ui.component.details
+package com.example.compose_movie.ui.component.details.movie
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*

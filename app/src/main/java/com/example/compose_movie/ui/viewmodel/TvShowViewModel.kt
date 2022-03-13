@@ -112,7 +112,7 @@ class TvShowViewModel @Inject constructor(
         deleteTvShowUseCase.execute(tvShow)
     }
 
-    fun getSavedMovie() = flow{
+    fun getSavedTvShow() = flow{
         getSavedTvShowUseCase.execute().collect{
             emit(it)
         }

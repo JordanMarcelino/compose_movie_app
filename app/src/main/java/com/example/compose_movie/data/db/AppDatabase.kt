@@ -8,7 +8,7 @@ import com.example.compose_movie.data.model.domain.TvShow
 @Database(
     entities = [Movie::class, TvShow::class],
     exportSchema = false,
-    version = 2
+    version = 3
 )
 abstract class AppDatabase : RoomDatabase(){
     abstract fun getMovieDao() : MovieDao
