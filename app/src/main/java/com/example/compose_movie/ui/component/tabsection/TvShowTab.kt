@@ -13,8 +13,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.compose_movie.ui.component.details.NowPlayingMovie
 import com.example.compose_movie.ui.component.details.movie.FavoriteMovie
 import com.example.compose_movie.ui.component.details.tvshow.FavoriteTvShow
+import com.example.compose_movie.ui.component.details.tvshow.TopRatedTvShowSection
 import com.example.compose_movie.ui.component.details.tvshow.TvShowSection
 
 @Composable
@@ -22,6 +24,18 @@ fun ColumnScope.TvShowTab(
     navController: NavHostController,
 ) {
     TvShowSection(navController = navController)
+    Spacer(modifier = Modifier.height(32.dp))
+    Text(
+        text = "Top Rated Tv Show",
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .align(Alignment.Start),
+        color = Color.White
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    TopRatedTvShowSection(navController = navController)
     Spacer(modifier = Modifier.height(32.dp))
     Text(
         text = "My Favorites",

@@ -56,6 +56,18 @@ sealed class Screen(val navigation : String){
             return "${this.navigation}/$title/$id/$overview/$rate/$date/$url"
         }
     }
+    object TvShowTopRatedDetail : Screen("TVSHOW_TOPRATED_SCREEN"){
+        fun navigateDetailTvShowWithArgs(
+            url : String,
+            title : String,
+            rate : String,
+            date : String,
+            overview : String,
+            id : Int
+        ) : String{
+            return "${this.navigation}/$title/$id/$overview/$rate/$date/$url"
+        }
+    }
     object TvShowSavedDetail : Screen("TVSHOW_SAVED_SCREEN"){
         fun navigateDetailTvShowWithArgs(
             url : String,

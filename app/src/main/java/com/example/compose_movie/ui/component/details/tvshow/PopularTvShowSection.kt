@@ -27,49 +27,6 @@ import com.example.compose_movie.ui.viewmodel.TvShowViewModel
 import java.net.URLEncoder
 
 @Composable
-fun TvShowSection(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    tvShowViewModel: TvShowViewModel = hiltViewModel(),
-) {
-
-    val currentState by remember {
-        tvShowViewModel.currentState
-    }
-
-    if (currentState is Resource.Success) {
-        PopularTvShowRow(
-            navController = navController,
-            modifier = modifier
-        )
-    } else if (currentState is Resource.Error) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(24.dp)),
-            contentAlignment = Alignment.Center
-        )
-        {
-            Retry(currentState.message.toString()) {
-                tvShowViewModel.loadPopularTvShow()
-            }
-        }
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clip(RoundedCornerShape(24.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        if (currentState is Resource.Loading) {
-            ShimmerAnimation()
-        }
-
-    }
-}
-
-@Composable
 fun PopularTvShowRow(
     navController: NavHostController,
     modifier: Modifier = Modifier,
@@ -112,6 +69,49 @@ fun PopularTvShowRow(
             }
             Spacer(modifier = Modifier.width(32.dp))
         }
+    }
+}
+
+@Composable
+fun TvShowSection(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    tvShowViewModel: TvShowViewModel = hiltViewModel(),
+) {
+
+    val currentState by remember {
+        tvShowViewModel.currentState
+    }
+
+    if (currentState is Resource.Success) {
+        PopularTvShowRow(
+            navController = navController,
+            modifier = modifier
+        )
+    } else if (currentState is Resource.Error) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(24.dp)),
+            contentAlignment = Alignment.Center
+        )
+        {
+            Retry(currentState.message.toString()) {
+                tvShowViewModel.loadPopularTvShow()
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(24.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        if (currentState is Resource.Loading) {
+            ShimmerAnimation()
+        }
+
     }
 }
 
