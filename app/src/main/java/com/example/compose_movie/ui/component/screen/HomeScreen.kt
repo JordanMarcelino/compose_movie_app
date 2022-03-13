@@ -10,12 +10,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.compose_movie.ui.component.details.FavoriteMovie
 import com.example.compose_movie.ui.component.details.MovieSection
 import com.example.compose_movie.ui.viewmodel.MovieViewModel
 
@@ -47,11 +49,24 @@ fun HomeScreen(
             ) {
                 index = it
             }
+            Spacer(modifier = Modifier.height(10.dp))
             when (index) {
                 0 -> MovieSection(
                     navController = navController,
                 )
             }
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = "My Favorites",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .align(Alignment.Start),
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            FavoriteMovie(navController = navController)
         }
     }
 }
