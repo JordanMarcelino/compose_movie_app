@@ -40,6 +40,7 @@ fun MovieDetails(
     overview: String,
     id: Int,
     adult: Boolean,
+    movieRow: @Composable () -> Unit,
     movieViewModel: MovieViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
@@ -89,17 +90,14 @@ fun MovieDetails(
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     Text(
-                        text = "Other movie",
+                        text = "Other Movie",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 8.dp),
                         color = Color.White
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    PopularMovieRow(
-                        navController = navController,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
+                    movieRow()
                     Spacer(modifier = Modifier.height(100.dp))
                 }
                 TopSection(

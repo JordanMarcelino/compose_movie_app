@@ -2,7 +2,6 @@ package com.example.compose_movie.data.repository
 
 import com.example.compose_movie.data.model.domain.Movie
 import com.example.compose_movie.data.model.web.MovieResponse
-import com.example.compose_movie.data.model.web.Result
 import com.example.compose_movie.data.repository.datasource.MovieLocalDataSource
 import com.example.compose_movie.data.repository.datasource.MovieRemoteDataSource
 import com.example.compose_movie.data.util.Resource
@@ -17,6 +16,8 @@ class MovieRepositoryImpl(
 
     override suspend fun getPopularMovie(page: Int): Resource<MovieResponse> =
         responseToResource(remoteDataSource.getPopularMovie(page))
+
+    override suspend fun getNowPlaying(page: Int): Resource<MovieResponse> = responseToResource(remoteDataSource.getNowPlayingMovie(page))
 
     override suspend fun saveMovie(movie: Movie) = localDataSource.saveMovie(movie)
 

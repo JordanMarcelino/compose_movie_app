@@ -1,10 +1,7 @@
 package com.example.compose_movie.ui.di
 
 import com.example.compose_movie.domain.repository.MovieRepository
-import com.example.compose_movie.domain.usecase.DeleteMovieUseCase
-import com.example.compose_movie.domain.usecase.GetPopularMovieUseCase
-import com.example.compose_movie.domain.usecase.GetSavedMovieUseCase
-import com.example.compose_movie.domain.usecase.SaveMovieUseCase
+import com.example.compose_movie.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +41,14 @@ class UseCaseModule {
     fun providesGetSavedMovieUseCase(
         movieRepository: MovieRepository
     ): GetSavedMovieUseCase = GetSavedMovieUseCase(
+        movieRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providesGetNowPlayingMovieUseCase(
+        movieRepository: MovieRepository
+    ): GetNowPlayingUseCase = GetNowPlayingUseCase(
         movieRepository
     )
 }

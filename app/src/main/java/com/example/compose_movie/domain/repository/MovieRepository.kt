@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface MovieRepository {
 
     suspend fun getPopularMovie(page : Int) : Resource<MovieResponse>
+    suspend fun getNowPlaying(page : Int) : Resource<MovieResponse>
     suspend fun saveMovie(movie: Movie)
     suspend fun deleteMovie(movie: Movie)
     fun getSavedMovie() : Flow<List<Movie>>

@@ -18,4 +18,30 @@ sealed class Screen(val navigation : String){
             return "${this.navigation}/$title/$id/$overview/$rate/$date/$adult/$url"
         }
     }
+    object MovieNowPlayingDetail : Screen("MOVIE_NOWPLAYING_SCREEN"){
+        fun navigateDetailMovieWithArgs(
+            url : String,
+            title : String,
+            rate : String,
+            date : String,
+            overview : String,
+            id : Int,
+            adult : Boolean
+        ) : String{
+            return "${this.navigation}/$title/$id/$overview/$rate/$date/$adult/$url"
+        }
+    }
+    object MovieSavedDetail : Screen("MOVIE_SAVED_SCREEN"){
+        fun navigateDetailMovieWithArgs(
+            url : String,
+            title : String,
+            rate : String,
+            date : String,
+            overview : String,
+            id : Int,
+            adult : Boolean
+        ) : String{
+            return "${this.navigation}/$title/$id/$overview/$rate/$date/$adult/$url"
+        }
+    }
 }

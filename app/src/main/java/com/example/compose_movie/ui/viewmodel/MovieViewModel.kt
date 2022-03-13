@@ -11,10 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.compose_movie.data.model.domain.Movie
 import com.example.compose_movie.data.model.web.Result
 import com.example.compose_movie.data.util.Resource
-import com.example.compose_movie.domain.usecase.DeleteMovieUseCase
-import com.example.compose_movie.domain.usecase.GetPopularMovieUseCase
-import com.example.compose_movie.domain.usecase.GetSavedMovieUseCase
-import com.example.compose_movie.domain.usecase.SaveMovieUseCase
+import com.example.compose_movie.domain.usecase.*
 import com.example.compose_movie.ui.App
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +23,7 @@ import javax.inject.Inject
 class MovieViewModel @Inject constructor(
     private val app : Application,
     private val getPopularMovieUseCase: GetPopularMovieUseCase,
+    private val getNowPlayingUseCase: GetNowPlayingUseCase,
     private val saveMovieUseCase: SaveMovieUseCase,
     private val deleteMovieUseCase: DeleteMovieUseCase,
     private val getSavedMovieUseCase: GetSavedMovieUseCase
@@ -34,13 +32,20 @@ class MovieViewModel @Inject constructor(
     private val movies = mutableStateOf<List<Result>>(listOf())
     val movie = movies
 
+    private val _nowPlaying = mutableStateOf<List<Result>>(listOf())
+    val nowPlaying = _nowPlaying
+
     var currentState = mutableStateOf<Resource<Any>>(Resource.Loading())
+    var currentStateNowPlaying = mutableStateOf<Resource<Any>>(Resource.Loading())
     var endReached = mutableStateOf(false)
+    var endReachedNowPlaying = mutableStateOf(false)
 
     private var page = 1
+    private var pageNowPlaying = 1
 
     init {
         loadPopularMovie()
+        loadLatestMovie()
     }
 
     fun loadPopularMovie() = viewModelScope.launch(Dispatchers.IO) {
@@ -68,6 +73,34 @@ class MovieViewModel @Inject constructor(
             }
         }catch (e : Exception){
             currentState.value = Resource.Error(e.message.toString())
+        }
+    }
+
+    fun loadLatestMovie() = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            if (isNetworkAvailable()){
+                when(val response = getNowPlayingUseCase.execute(pageNowPlaying)){
+                    is Resource.Success -> {
+                        endReachedNowPlaying.value = pageNowPlaying * 20 >= response.data!!.totalResults!!
+                        response.data.results?.forEach {
+                            it.apply {
+                                posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
+                            }
+                        }
+                        _nowPlaying.value += response.data.results!!
+                        currentStateNowPlaying.value = Resource.Success("Success")
+                        pageNowPlaying++
+                    }
+                    is Resource.Error -> {
+                        currentStateNowPlaying.value = Resource.Error(response.message.toString())
+                    }
+                    else -> { currentStateNowPlaying.value = Resource.Error(response.message.toString()) }
+                }
+            }else{
+                currentStateNowPlaying.value = Resource.Error("Internet is not available")
+            }
+        }catch (e : Exception){
+            currentStateNowPlaying.value = Resource.Error(e.message.toString())
         }
     }
 
