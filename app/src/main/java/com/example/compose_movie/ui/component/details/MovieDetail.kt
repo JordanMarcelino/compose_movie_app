@@ -1,6 +1,5 @@
 package com.example.compose_movie.ui.component.details
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,82 +39,98 @@ fun MovieDetails(
     date: String,
     overview: String,
     id: Int,
-    adult: Boolean
+    adult: Boolean,
+    movieViewModel: MovieViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
-    Column(
-        modifier = Modifier
-            .verticalScroll(scrollState)
-            .fillMaxSize()
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                MovieImage(
-                    url = url,
-                    title = title,
-                    rate = rate,
-                    date = date,
-                    adult = adult
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = overview,
-                    fontSize = 24.sp,
-                    color = Color.White,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-                Text(
-                    text = "Other movie",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                PopularMovieRow(
-                    navController = navController,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-                Spacer(modifier = Modifier.height(100.dp))
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    val movie = Movie(
+        url = url,
+        title = title,
+        rate = rate,
+        date = date,
+        overview = overview,
+        id = id,
+        adult = adult
+    )
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        scaffoldState = scaffoldState,
+        snackbarHost = { snackbarHostState ->
+            SnackBarHost(snackBarHostState = snackbarHostState) {
+                movieViewModel.deleteMovie(movie)
             }
-            TopSection(
-                navController,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(16.dp, 16.dp),
-                url = url,
-                title = title,
-                rate = rate,
-                date = date,
-                overview = overview,
-                id = id,
-                adult = adult
-            )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .fillMaxSize()
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    MovieImage(
+                        url = url,
+                        title = title,
+                        rate = rate,
+                        date = date,
+                        adult = adult
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = overview,
+                        fontSize = 24.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = "Other movie",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    PopularMovieRow(
+                        navController = navController,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(100.dp))
+                }
+                TopSection(
+                    navController = navController,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .offset(16.dp, 16.dp),
+                    onSave = {
+                        scope.launch {
+                            movieViewModel.saveMovie(
+                                movie
+                            )
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                "Success adding movie to favourite",
+                                duration = SnackbarDuration.Short,
+                                actionLabel = "Undo"
+                            )
+                        }
+                    }
+                )
+            }
         }
     }
-
 }
 
 @Composable
 fun TopSection(
     navController: NavController,
     modifier: Modifier = Modifier,
-    url: String,
-    title: String,
-    rate: String,
-    date: String,
-    overview: String,
-    id: Int,
-    adult: Boolean,
-    movieViewModel: MovieViewModel = hiltViewModel(),
+    onSave: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    val snackBarHostState = remember {
-        SnackbarHostState()
-    }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -157,28 +171,7 @@ fun TopSection(
                 )
                 .padding(vertical = 8.dp)
                 .clickable {
-                    val movie = Movie(
-                        url = url,
-                        title = title,
-                        rate = rate,
-                        date = date,
-                        overview = overview,
-                        id = id,
-                        adult = adult
-                    )
-                    movieViewModel.saveMovie(
-                        movie
-                    )
-                    scope.launch {
-                        val snackBarResult = snackBarHostState.showSnackbar(
-                            "Success adding movie to favourite",
-                            duration = SnackbarDuration.Short,
-                            actionLabel = "Undo"
-                        )
-                        if (snackBarResult == SnackbarResult.ActionPerformed) {
-                            movieViewModel.deleteMovie(movie)
-                        }
-                    }
+                    onSave()
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -191,34 +184,7 @@ fun TopSection(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        SnackbarHost(
-            hostState = snackBarHostState,
-            modifier = Modifier.align(Alignment.Center)
-        ) { snackbarData ->
-            Card(
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(2.dp, Color.White),
-                modifier = Modifier
-                    .padding(16.dp)
-                    .wrapContentSize()
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                ) {
-                    Text(text = snackbarData.message)
-                    Button(onClick = { /*TODO*/ }) {
-                        Text(text = snackbarData.actionLabel.toString())
-                    }
-                }
-            }
-            Log.i("MYTAG", snackbarData.message)
-        }
-    }
+
 }
 
 @Composable
@@ -318,5 +284,39 @@ fun ImageDesc(
             textAlign = TextAlign.Center,
             fontSize = 24.sp
         )
+    }
+}
+
+@Composable
+fun SnackBarHost(
+    snackBarHostState: SnackbarHostState,
+    onClick: () -> Unit
+) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+        SnackbarHost(
+            hostState = snackBarHostState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        ) { snackbarData ->
+            Card(
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(2.dp, Color.White),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .wrapContentSize()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    Text(text = snackbarData.message)
+                    Button(onClick = { onClick() }) {
+                        Text(text = snackbarData.actionLabel.toString())
+                    }
+                }
+            }
+        }
     }
 }

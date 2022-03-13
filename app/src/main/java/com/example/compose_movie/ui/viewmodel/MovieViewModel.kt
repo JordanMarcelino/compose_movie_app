@@ -17,6 +17,8 @@ import com.example.compose_movie.domain.usecase.GetSavedMovieUseCase
 import com.example.compose_movie.domain.usecase.SaveMovieUseCase
 import com.example.compose_movie.ui.App
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,7 +43,7 @@ class MovieViewModel @Inject constructor(
         loadPopularMovie()
     }
 
-    fun loadPopularMovie() = viewModelScope.launch {
+    fun loadPopularMovie() = viewModelScope.launch(Dispatchers.IO) {
         try {
             if (isNetworkAvailable()){
                 when(val response = getPopularMovieUseCase.execute(page)){
@@ -69,12 +71,18 @@ class MovieViewModel @Inject constructor(
         }
     }
 
-    fun saveMovie(movie : Movie) = viewModelScope.launch {
+    fun saveMovie(movie : Movie) = viewModelScope.launch(Dispatchers.IO) {
         saveMovieUseCase.execute(movie)
     }
 
-    fun deleteMovie(movie : Movie) = viewModelScope.launch {
+    fun deleteMovie(movie : Movie) = viewModelScope.launch(Dispatchers.IO) {
         deleteMovieUseCase.execute(movie)
+    }
+
+    fun getSavedMovie() = flow{
+        getSavedMovieUseCase.execute().collect{
+            emit(it)
+        }
     }
 
     private fun isNetworkAvailable(): Boolean {
