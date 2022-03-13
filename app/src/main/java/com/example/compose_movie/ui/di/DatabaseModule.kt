@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.compose_movie.data.db.AppDatabase
 import com.example.compose_movie.data.db.MovieDao
+import com.example.compose_movie.data.db.TvShowDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,4 +27,8 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providesMovieDao(appDatabase: AppDatabase) : MovieDao = appDatabase.getMovieDao()
+
+    @Singleton
+    @Provides
+    fun providesTvShowDao(appDatabase: AppDatabase) : TvShowDao = appDatabase.getTvShowDao()
 }

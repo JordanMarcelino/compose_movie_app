@@ -24,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.example.compose_movie.data.model.web.Result
+import com.example.compose_movie.data.model.web.movie.Result
 import com.example.compose_movie.data.util.Resource
 import com.example.compose_movie.ui.component.navgraph.Screen
 import com.example.compose_movie.ui.theme.ShimmerColorShades
@@ -185,7 +185,7 @@ fun ShimmerItem(
             .height(200.dp)
             .width(150.dp)
             .background(brush = brush)
-            .clip(RoundedCornerShape(18.dp))
+            .clip(RoundedCornerShape(24.dp))
     )
 }
 

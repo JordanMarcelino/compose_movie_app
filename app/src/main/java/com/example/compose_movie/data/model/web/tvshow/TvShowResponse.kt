@@ -1,9 +1,9 @@
-package com.example.compose_movie.data.model.web
+package com.example.compose_movie.data.model.web.tvshow
 
 
 import com.google.gson.annotations.SerializedName
 
-data class MovieResponse(
+data class TvShowResponse(
     @SerializedName("page")
     val page: Int?,
     @SerializedName("results")

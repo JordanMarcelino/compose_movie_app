@@ -8,8 +8,8 @@ import android.os.Build
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.compose_movie.data.model.domain.Movie
-import com.example.compose_movie.data.model.web.movie.Result
+import com.example.compose_movie.data.model.domain.TvShow
+import com.example.compose_movie.data.model.web.tvshow.Result
 import com.example.compose_movie.data.util.Resource
 import com.example.compose_movie.domain.usecase.*
 import com.example.compose_movie.ui.App
@@ -20,38 +20,38 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieViewModel @Inject constructor(
+class TvShowViewModel @Inject constructor(
     private val app : Application,
-    private val getPopularMovieUseCase: GetPopularMovieUseCase,
-    private val getNowPlayingUseCase: GetNowPlayingUseCase,
-    private val saveMovieUseCase: SaveMovieUseCase,
-    private val deleteMovieUseCase: DeleteMovieUseCase,
-    private val getSavedMovieUseCase: GetSavedMovieUseCase
+    private val getPopularTvShowUseCase: GetPopularTvShowUseCase,
+    private val getTopRatedTvShowUseCase: GetTopRatedTvShowUseCase,
+    private val saveTvShowUseCase: SaveTvShowUseCase,
+    private val deleteTvShowUseCase: DeleteTvShowUseCase,
+    private val getSavedTvShowUseCase: GetSavedTvShowUseCase
 ) : AndroidViewModel(app){
 
-    private val movies = mutableStateOf<List<Result>>(listOf())
-    val movie = movies
+    private val _popularTvShow = mutableStateOf<List<Result>>(listOf())
+    val popularTvShow = _popularTvShow
 
-    private val _nowPlaying = mutableStateOf<List<Result>>(listOf())
-    val nowPlaying = _nowPlaying
+    private val _topRated = mutableStateOf<List<Result>>(listOf())
+    val topRated = _topRated
 
     var currentState = mutableStateOf<Resource<Any>>(Resource.Loading())
-    var currentStateNowPlaying = mutableStateOf<Resource<Any>>(Resource.Loading())
+    var currentStateTopRated = mutableStateOf<Resource<Any>>(Resource.Loading())
     var endReached = mutableStateOf(false)
-    var endReachedNowPlaying = mutableStateOf(false)
+    var endReachedTopRated = mutableStateOf(false)
 
     private var page = 1
-    private var pageNowPlaying = 1
+    private var pageTopRated = 1
 
     init {
-        loadPopularMovie()
-        loadLatestMovie()
+        loadPopularTvShow()
+        loadTopRatedTvShow()
     }
 
-    fun loadPopularMovie() = viewModelScope.launch(Dispatchers.IO) {
+    fun loadPopularTvShow() = viewModelScope.launch(Dispatchers.IO) {
         try {
             if (isNetworkAvailable()){
-                when(val response = getPopularMovieUseCase.execute(page)){
+                when(val response = getPopularTvShowUseCase.execute(page)){
                     is Resource.Success -> {
                         endReached.value = page * 20 >= response.data!!.totalResults!!
                         response.data.results?.forEach {
@@ -59,7 +59,7 @@ class MovieViewModel @Inject constructor(
                                 posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
                             }
                         }
-                        movies.value += response.data.results!!
+                        _popularTvShow.value += response.data.results!!
                         currentState.value = Resource.Success("Success")
                         page++
                     }
@@ -76,44 +76,44 @@ class MovieViewModel @Inject constructor(
         }
     }
 
-    fun loadLatestMovie() = viewModelScope.launch(Dispatchers.IO) {
+    fun loadTopRatedTvShow() = viewModelScope.launch(Dispatchers.IO) {
         try {
             if (isNetworkAvailable()){
-                when(val response = getNowPlayingUseCase.execute(pageNowPlaying)){
+                when(val response = getTopRatedTvShowUseCase.execute(pageTopRated)){
                     is Resource.Success -> {
-                        endReachedNowPlaying.value = pageNowPlaying * 20 >= response.data!!.totalResults!!
+                        endReachedTopRated.value = pageTopRated * 20 >= response.data!!.totalResults!!
                         response.data.results?.forEach {
                             it.apply {
                                 posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
                             }
                         }
-                        _nowPlaying.value += response.data.results!!
-                        currentStateNowPlaying.value = Resource.Success("Success")
-                        pageNowPlaying++
+                        _topRated.value += response.data.results!!
+                        currentStateTopRated.value = Resource.Success("Success")
+                        pageTopRated++
                     }
                     is Resource.Error -> {
-                        currentStateNowPlaying.value = Resource.Error(response.message.toString())
+                        currentStateTopRated.value = Resource.Error(response.message.toString())
                     }
-                    else -> { currentStateNowPlaying.value = Resource.Error(response.message.toString()) }
+                    else -> { currentStateTopRated.value = Resource.Error(response.message.toString()) }
                 }
             }else{
-                currentStateNowPlaying.value = Resource.Error("Internet is not available")
+                currentStateTopRated.value = Resource.Error("Internet is not available")
             }
         }catch (e : Exception){
-            currentStateNowPlaying.value = Resource.Error(e.message.toString())
+            currentStateTopRated.value = Resource.Error(e.message.toString())
         }
     }
 
-    fun saveMovie(movie : Movie) = viewModelScope.launch(Dispatchers.IO) {
-        saveMovieUseCase.execute(movie)
+    fun saveTvShow(tvShow : TvShow) = viewModelScope.launch(Dispatchers.IO) {
+        saveTvShowUseCase.execute(tvShow)
     }
 
-    fun deleteMovie(movie : Movie) = viewModelScope.launch(Dispatchers.IO) {
-        deleteMovieUseCase.execute(movie)
+    fun deleteTvShow(tvShow : TvShow) = viewModelScope.launch(Dispatchers.IO) {
+        deleteTvShowUseCase.execute(tvShow)
     }
 
     fun getSavedMovie() = flow{
-        getSavedMovieUseCase.execute().collect{
+        getSavedTvShowUseCase.execute().collect{
             emit(it)
         }
     }
@@ -135,4 +135,5 @@ class MovieViewModel @Inject constructor(
             else -> false
         }
     }
+
 }

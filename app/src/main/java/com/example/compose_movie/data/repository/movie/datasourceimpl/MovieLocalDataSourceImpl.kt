@@ -1,9 +1,8 @@
-package com.example.compose_movie.data.repository.datasourceimpl
+package com.example.compose_movie.data.repository.movie.datasourceimpl
 
 import com.example.compose_movie.data.db.MovieDao
 import com.example.compose_movie.data.model.domain.Movie
-import com.example.compose_movie.data.model.web.Result
-import com.example.compose_movie.data.repository.datasource.MovieLocalDataSource
+import com.example.compose_movie.data.repository.movie.datasource.MovieLocalDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

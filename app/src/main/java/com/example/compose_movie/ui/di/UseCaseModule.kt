@@ -1,6 +1,7 @@
 package com.example.compose_movie.ui.di
 
 import com.example.compose_movie.domain.repository.MovieRepository
+import com.example.compose_movie.domain.repository.TvShowRepository
 import com.example.compose_movie.domain.usecase.*
 import dagger.Module
 import dagger.Provides
@@ -51,4 +52,45 @@ class UseCaseModule {
     ): GetNowPlayingUseCase = GetNowPlayingUseCase(
         movieRepository
     )
+
+    @Singleton
+    @Provides
+    fun providesGetPopularTvShowUseCase(
+        tvShowRepository: TvShowRepository
+    ): GetPopularTvShowUseCase = GetPopularTvShowUseCase(
+        tvShowRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providesGetTopRatedTvShowUseCase(
+        tvShowRepository: TvShowRepository
+    ): GetTopRatedTvShowUseCase = GetTopRatedTvShowUseCase(
+        tvShowRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providesSaveTvShowUseCase(
+        tvShowRepository: TvShowRepository
+    ): SaveTvShowUseCase = SaveTvShowUseCase(
+        tvShowRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providesDeleteTvShowUseCase(
+        tvShowRepository: TvShowRepository
+    ): DeleteTvShowUseCase = DeleteTvShowUseCase(
+        tvShowRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providesGetSavedTvShowUseCase(
+        tvShowRepository: TvShowRepository
+    ): GetSavedTvShowUseCase = GetSavedTvShowUseCase(
+        tvShowRepository
+    )
+
 }

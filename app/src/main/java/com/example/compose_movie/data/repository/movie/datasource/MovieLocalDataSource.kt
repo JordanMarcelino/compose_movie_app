@@ -1,7 +1,6 @@
-package com.example.compose_movie.data.repository.datasource
+package com.example.compose_movie.data.repository.movie.datasource
 
 import com.example.compose_movie.data.model.domain.Movie
-import com.example.compose_movie.data.model.web.Result
 import kotlinx.coroutines.flow.Flow
 
 interface MovieLocalDataSource {

@@ -1,6 +1,6 @@
-package com.example.compose_movie.data.repository.datasource
+package com.example.compose_movie.data.repository.movie.datasource
 
-import com.example.compose_movie.data.model.web.MovieResponse
+import com.example.compose_movie.data.model.web.movie.MovieResponse
 import retrofit2.Response
 
 interface MovieRemoteDataSource {

@@ -20,6 +20,7 @@ import androidx.navigation.NavHostController
 import com.example.compose_movie.ui.component.details.FavoriteMovie
 import com.example.compose_movie.ui.component.details.NowPlayingMovie
 import com.example.compose_movie.ui.component.details.MovieSection
+import com.example.compose_movie.ui.component.tabsection.MovieTab
 import com.example.compose_movie.ui.viewmodel.MovieViewModel
 
 @Composable
@@ -53,34 +54,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
             when (index) {
                 0 -> {
-                    MovieSection(
-                        navController = navController,
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Text(
-                        text = "Latest Movie",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .align(Alignment.Start),
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    NowPlayingMovie(navController = navController)
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Text(
-                        text = "My Favorites",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .align(Alignment.Start),
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    FavoriteMovie(navController = navController)
-                    Spacer(modifier = Modifier.height(100.dp))
+                   MovieTab(navController = navController)
                 }
             }
 
