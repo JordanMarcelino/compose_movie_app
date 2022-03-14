@@ -93,4 +93,20 @@ class UseCaseModule {
         tvShowRepository
     )
 
+    @Singleton
+    @Provides
+    fun providesGetSearchedTvShowUseCase(
+        tvShowRepository: TvShowRepository
+    ): GetSearchedTvShowUseCase = GetSearchedTvShowUseCase(
+        tvShowRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providesGetSearchedMovieUseCase(
+        movieRepository : MovieRepository
+    ): GetSearchedMovieUseCase = GetSearchedMovieUseCase(
+        movieRepository
+    )
+
 }
