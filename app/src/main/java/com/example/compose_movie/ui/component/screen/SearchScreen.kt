@@ -5,10 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -67,22 +64,24 @@ fun SearchScreen(
                     navController = navController,
                     query = query
                 )
+                Spacer(modifier = Modifier.height(100.dp))
             }
             1 -> {
 
             }
         }
-        Spacer(modifier = Modifier.height(100.dp))
+
     }
 }
 
 @Composable
 fun SearchedMovie(
     navController: NavHostController,
+    query : String,
     modifier: Modifier = Modifier,
-    query: String,
     movieViewModel: MovieViewModel = hiltViewModel()
 ) {
+
 
     val currentState by remember {
         movieViewModel.currentStateSearched
@@ -91,10 +90,9 @@ fun SearchedMovie(
     if (currentState is Resource.Success) {
         SearchedMovieColumn(
             navController = navController,
-            modifier = modifier,
-            query = query
+            modifier = modifier
         )
-    } else if (currentState is Resource.Error) {
+    } else if (currentState.message == "Internet is not available") {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -114,7 +112,6 @@ fun SearchedMovie(
 fun SearchedMovieColumn(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    query: String,
     movieViewModel: MovieViewModel = hiltViewModel()
 ) {
 
@@ -138,7 +135,7 @@ fun SearchedMovieColumn(
         items(searched.size) {
             if (it >= searched.size - 1 && currentState !is Resource.Loading && !endReached) {
                 LaunchedEffect(key1 = true) {
-                    movieViewModel.loadSearchedMovie(query)
+                    movieViewModel.loadSearchedCachedMovie()
                 }
             }
 
@@ -188,7 +185,7 @@ fun MovieSearchedRow(
                     .crossfade(true)
                     .build(),
                 contentDescription = movie.originalTitle,
-                modifier = Modifier.weight(0.6f),
+                modifier = Modifier.weight(0.7f),
                 loading = {
                     ShimmerAnimation()
                 }
@@ -199,7 +196,7 @@ fun MovieSearchedRow(
         Column(
             modifier = Modifier
                 .weight(0.4f)
-                .padding(vertical = 8.dp, horizontal = 8.dp),
+                .padding(start = 8.dp, end = 10.dp, bottom = 8.dp, top = 12.dp),
             verticalArrangement = Arrangement.Center
         ) {
             Text(

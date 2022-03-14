@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,7 +38,9 @@ class MovieViewModel @Inject constructor(
     val nowPlaying = _nowPlaying
 
     private val _searched = mutableStateOf<List<Result>>(listOf())
-    val searched = _searched
+    private val _searchedCached = mutableStateOf<List<Result>>(listOf())
+    private val _query = mutableStateOf("")
+    val searched = _searchedCached
 
     var currentState = mutableStateOf<Resource<Any>>(Resource.Loading())
     var currentStateNowPlaying = mutableStateOf<Resource<Any>>(Resource.Loading())
@@ -51,21 +54,52 @@ class MovieViewModel @Inject constructor(
     private var pageNowPlaying = 1
     private var pageSearched = 1
 
+    fun loadSearchedCachedMovie() = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            if (isNetworkAvailable()) {
+                when (val response = getSearchedMovieUseCase.execute(pageSearched, URLEncoder.encode(_query.value, "utf-8"))) {
+                    is Resource.Success -> {
+                        endReachedSearched.value = pageSearched * 20 >= response.data!!.totalResults!!
+                        response.data.results?.forEach {
+                            it.apply {
+                                posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
+                            }
+                        }
+                        _searchedCached.value += response.data.results!!
+                        currentStateSearched.value = Resource.Success("Success")
+                        pageSearched++
+                    }
+                    is Resource.Error -> {
+                        currentStateSearched.value = Resource.Error(response.message.toString())
+                    }
+                    else -> {
+                        currentStateSearched.value = Resource.Error(response.message.toString())
+                    }
+                }
+            } else {
+                currentStateSearched.value = Resource.Error("Internet is not available")
+            }
+        } catch (e: Exception) {
+            currentStateSearched.value = Resource.Error(e.message.toString())
+        }
+    }
+
     fun loadSearchedMovie(query: String) = viewModelScope.launch(Dispatchers.IO) {
         try {
             if (isNetworkAvailable()) {
-                when (val response = getSearchedMovieUseCase.execute(pageSearched, query)) {
+                when (val response = getSearchedMovieUseCase.execute(pageSearched, URLEncoder.encode(query, "utf-8"))) {
                     is Resource.Success -> {
-                        endReachedSearched.value =
-                            pageSearched * 20 >= response.data!!.totalResults!!
+                        endReachedSearched.value = pageSearched * 20 >= response.data!!.totalResults!!
+                        _query.value = query
                         response.data.results?.forEach {
                             it.apply {
                                 posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
                             }
                         }
                         _searched.value = response.data.results!!
+                        _searchedCached.value = _searched.value
                         currentStateSearched.value = Resource.Success("Success")
-                        pageSearched++
+                        pageSearched = 1
                     }
                     is Resource.Error -> {
                         currentStateSearched.value = Resource.Error(response.message.toString())
