@@ -12,4 +12,6 @@ class MovieRemoteDataSourceImpl(
     override suspend fun getPopularMovie(page: Int): Response<MovieResponse> = apiService.getPopularMovie(page)
 
     override suspend fun getNowPlayingMovie(page: Int): Response<MovieResponse> = apiService.getNowPlaying(page)
+
+    override suspend fun getSearchedMovie(page: Int, query: String): Response<MovieResponse> = apiService.getSearchedMovie(page, query)
 }

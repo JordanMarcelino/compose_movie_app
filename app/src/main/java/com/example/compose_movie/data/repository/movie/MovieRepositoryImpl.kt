@@ -19,6 +19,8 @@ class MovieRepositoryImpl(
 
     override suspend fun getNowPlaying(page: Int): Resource<MovieResponse> = responseToResource(remoteDataSource.getNowPlayingMovie(page))
 
+    override suspend fun getSearchedMovie(page: Int, query: String): Resource<MovieResponse> = responseToResource(remoteDataSource.getSearchedMovie(page, query))
+
     override suspend fun saveMovie(movie: Movie) = localDataSource.saveMovie(movie)
 
     override suspend fun deleteMovie(movie: Movie) = localDataSource.deleteMovie(movie)

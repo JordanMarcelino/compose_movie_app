@@ -7,4 +7,5 @@ interface TvShowRemoteDataSource {
 
     suspend fun getPopularTvShow(page : Int) : Response<TvShowResponse>
     suspend fun getTopRatedTvShow(page : Int) : Response<TvShowResponse>
+    suspend fun getSearchedTvShow(page : Int, query : String) : Response<TvShowResponse>
 }

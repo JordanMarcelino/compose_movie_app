@@ -26,6 +26,16 @@ interface ApiService {
         apiKey : String = BuildConfig.API_KEY,
     ) : Response<MovieResponse>
 
+    @GET("search/movie")
+    suspend fun getSearchedMovie(
+        @Query("page")
+        page : Int,
+        @Query("query")
+        query : String,
+        @Query("api_key")
+        apiKey : String = BuildConfig.API_KEY,
+    ) : Response<MovieResponse>
+
     @GET("tv/popular")
     suspend fun getPopularTvShow(
         @Query("page")
@@ -38,6 +48,16 @@ interface ApiService {
     suspend fun getTopRatedTvShow(
         @Query("page")
         page : Int,
+        @Query("api_key")
+        apiKey : String = BuildConfig.API_KEY,
+    ) : Response<TvShowResponse>
+
+    @GET("tv/top_rated")
+    suspend fun getSearchedTvShow(
+        @Query("page")
+        page : Int,
+        @Query("query")
+        query : String,
         @Query("api_key")
         apiKey : String = BuildConfig.API_KEY,
     ) : Response<TvShowResponse>

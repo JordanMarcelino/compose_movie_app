@@ -9,6 +9,7 @@ interface MovieRepository {
 
     suspend fun getPopularMovie(page : Int) : Resource<MovieResponse>
     suspend fun getNowPlaying(page : Int) : Resource<MovieResponse>
+    suspend fun getSearchedMovie(page : Int, query : String) : Resource<MovieResponse>
     suspend fun saveMovie(movie: Movie)
     suspend fun deleteMovie(movie: Movie)
     fun getSavedMovie() : Flow<List<Movie>>

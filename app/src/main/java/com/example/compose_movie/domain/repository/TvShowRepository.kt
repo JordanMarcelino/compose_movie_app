@@ -10,6 +10,7 @@ interface TvShowRepository {
 
     suspend fun getPopularTvShow(page : Int) : Resource<TvShowResponse>
     suspend fun getTopRatedTvShow(page : Int) : Resource<TvShowResponse>
+    suspend fun getSearchedTvShow(page : Int, query : String) : Resource<TvShowResponse>
     suspend fun saveTvShow(tvShow : TvShow)
     suspend fun deleteTvShow(tvShow : TvShow)
     fun getSavedTvShow() : Flow<List<TvShow>>

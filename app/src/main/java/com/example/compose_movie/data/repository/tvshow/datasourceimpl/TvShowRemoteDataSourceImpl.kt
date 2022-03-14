@@ -14,4 +14,6 @@ class TvShowRemoteDataSourceImpl(
     override suspend fun getPopularTvShow(page: Int): Response<TvShowResponse> = apiService.getPopularTvShow(page)
 
     override suspend fun getTopRatedTvShow(page: Int): Response<TvShowResponse> = apiService.getTopRatedTvShow(page)
+
+    override suspend fun getSearchedTvShow(page: Int, query: String): Response<TvShowResponse> = apiService.getSearchedTvShow(page, query)
 }

@@ -7,4 +7,5 @@ interface MovieRemoteDataSource {
 
     suspend fun getPopularMovie(page : Int) : Response<MovieResponse>
     suspend fun getNowPlayingMovie(page : Int) : Response<MovieResponse>
+    suspend fun getSearchedMovie(page : Int, query : String) : Response<MovieResponse>
 }

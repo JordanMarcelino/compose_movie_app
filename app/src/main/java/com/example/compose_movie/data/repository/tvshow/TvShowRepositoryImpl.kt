@@ -19,6 +19,8 @@ class TvShowRepositoryImpl(
 
     override suspend fun getTopRatedTvShow(page: Int): Resource<TvShowResponse> = responseToResource(remoteDataSource.getTopRatedTvShow(page))
 
+    override suspend fun getSearchedTvShow(page: Int, query: String): Resource<TvShowResponse> = responseToResource(remoteDataSource.getSearchedTvShow(page, query))
+
     override suspend fun saveTvShow(tvShow: TvShow) = localDataSource.saveTvShow(tvShow)
 
     override suspend fun deleteTvShow(tvShow: TvShow) = localDataSource.deleteTvShow(tvShow)
