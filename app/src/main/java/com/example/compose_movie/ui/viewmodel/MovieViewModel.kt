@@ -39,7 +39,7 @@ class MovieViewModel @Inject constructor(
 
     private val _searched = mutableStateOf<List<Result>>(listOf())
     private val _searchedCached = mutableStateOf<List<Result>>(listOf())
-    private val _query = mutableStateOf("")
+    val _query = mutableStateOf("")
     val searched = _searchedCached
 
     var currentState = mutableStateOf<Resource<Any>>(Resource.Loading())

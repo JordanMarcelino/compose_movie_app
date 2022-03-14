@@ -85,6 +85,66 @@ fun NavGraphBuilder.searchedMovie(
     }
 }
 
+fun NavGraphBuilder.searchedTvShow(
+    navController: NavHostController
+){
+    composable(
+        route = "${Screen.TvShowSearched.navigation}/{title}/{id}/{overview}/{rate}/{date}/{url}",
+        arguments = listOf(
+            navArgument("url") {
+                type = NavType.StringType
+            },
+            navArgument("title") {
+                type = NavType.StringType
+            },
+            navArgument("rate") {
+                type = NavType.StringType
+            },
+            navArgument("date") {
+                type = NavType.StringType
+            },
+            navArgument("overview") {
+                type = NavType.StringType
+            },
+            navArgument("id") {
+                type = NavType.IntType
+            }
+        )
+    ) {
+        val bundle = it.arguments!!
+        val url = remember {
+            bundle.getString("url")
+        }
+        val title = remember {
+            bundle.getString("title")
+        }
+        val rate = remember {
+            bundle.getString("rate")
+        }
+        val date = remember {
+            bundle.getString("date")
+        }
+        val overview = remember {
+            bundle.getString("overview")
+        }
+        val id = remember {
+            bundle.getInt("id")
+        }
+        TvShowDetails(
+            navController = navController,
+            url = url.toString(),
+            title = title.toString(),
+            rate = rate.toString(),
+            date = date.toString(),
+            overview = overview.toString(),
+            id = id,
+            tvShowRow = {
+
+            },
+        )
+    }
+}
+
 fun NavGraphBuilder.topRatedTvShow(
     navController: NavHostController
 ){

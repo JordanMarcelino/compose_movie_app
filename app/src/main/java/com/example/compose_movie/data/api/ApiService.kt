@@ -52,7 +52,7 @@ interface ApiService {
         apiKey : String = BuildConfig.API_KEY,
     ) : Response<TvShowResponse>
 
-    @GET("tv/top_rated")
+    @GET("search/tv")
     suspend fun getSearchedTvShow(
         @Query("page")
         page : Int,

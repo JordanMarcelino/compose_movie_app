@@ -53,6 +53,7 @@ fun Navigation() {
             savedTvShow(navController)
             topRatedTvShow(navController)
             searchedMovie(navController)
+            searchedTvShow(navController)
         }
 
     }
