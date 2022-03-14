@@ -38,6 +38,10 @@ fun MovieSection(
     movieViewModel: MovieViewModel = hiltViewModel(),
 ) {
 
+    LaunchedEffect(key1 = true){
+        movieViewModel.loadPopularMovie()
+    }
+
     val currentState by remember {
         movieViewModel.currentState
     }
@@ -80,6 +84,10 @@ fun PopularMovieRow(
     modifier: Modifier = Modifier,
     movieViewModel: MovieViewModel = hiltViewModel()
 ) {
+
+    LaunchedEffect(key1 = true){
+        movieViewModel.loadPopularMovie()
+    }
 
     val movies by remember {
         movieViewModel.movie

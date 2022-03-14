@@ -80,4 +80,17 @@ sealed class Screen(val navigation : String){
             return "${this.navigation}/$title/$id/$overview/$rate/$date/$url"
         }
     }
+    object MovieSearched : Screen("MOVIE_SEARCHED_SCREEN"){
+        fun navigateDetailMovieWithArgs(
+            url : String,
+            title : String,
+            rate : String,
+            date : String,
+            overview : String,
+            id : Int,
+            adult : Boolean
+        ) : String{
+            return "${this.navigation}/$title/$id/$overview/$rate/$date/$adult/$url"
+        }
+    }
 }

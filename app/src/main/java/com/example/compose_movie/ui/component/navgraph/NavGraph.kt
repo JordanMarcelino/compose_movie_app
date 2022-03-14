@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.compose_movie.ui.component.details.NowPlayingMovieRow
+import com.example.compose_movie.ui.component.details.movie.NowPlayingMovieRow
 import com.example.compose_movie.ui.component.details.movie.MovieDetails
 import com.example.compose_movie.ui.component.details.movie.PopularMovieRow
 import com.example.compose_movie.ui.component.details.movie.SavedMovieRow
@@ -17,6 +17,73 @@ import com.example.compose_movie.ui.component.details.tvshow.PopularTvShowRow
 import com.example.compose_movie.ui.component.details.tvshow.SavedTvShowRow
 import com.example.compose_movie.ui.component.details.tvshow.TopRatedTvShowRow
 import com.example.compose_movie.ui.component.details.tvshow.TvShowDetails
+
+fun NavGraphBuilder.searchedMovie(
+    navController: NavHostController
+){
+    composable(
+        route = "${Screen.MovieSearched.navigation}/{title}/{id}/{overview}/{rate}/{date}/{adult}/{url}",
+        arguments = listOf(
+            navArgument("url") {
+                type = NavType.StringType
+            },
+            navArgument("title") {
+                type = NavType.StringType
+            },
+            navArgument("rate") {
+                type = NavType.StringType
+            },
+            navArgument("date") {
+                type = NavType.StringType
+            },
+            navArgument("adult") {
+                type = NavType.BoolType
+            },
+            navArgument("overview") {
+                type = NavType.StringType
+            },
+            navArgument("id") {
+                type = NavType.IntType
+            }
+        )
+    ) {
+        val bundle = it.arguments!!
+        val url = remember {
+            bundle.getString("url")
+        }
+        val title = remember {
+            bundle.getString("title")
+        }
+        val rate = remember {
+            bundle.getString("rate")
+        }
+        val date = remember {
+            bundle.getString("date")
+        }
+        val adult = remember {
+            bundle.getBoolean("adult")
+        }
+        val overview = remember {
+            bundle.getString("overview")
+        }
+        val id = remember {
+            bundle.getInt("id")
+        }
+        MovieDetails(
+            navController = navController,
+            url = url.toString(),
+            title = title.toString(),
+            rate = rate.toString(),
+            date = date.toString(),
+            overview = overview.toString(),
+            id = id,
+            movieRow = {
+
+            },
+            adult = adult
+        )
+    }
+}
 
 fun NavGraphBuilder.topRatedTvShow(
     navController: NavHostController

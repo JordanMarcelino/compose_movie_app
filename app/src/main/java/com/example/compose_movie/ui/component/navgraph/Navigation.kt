@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose_movie.ui.component.screen.FavouriteScreen
-import com.example.compose_movie.ui.component.SearchScreen
+import com.example.compose_movie.ui.component.screen.SearchScreen
 import com.example.compose_movie.ui.component.screen.HomeScreen
 
 @Composable
@@ -39,7 +39,7 @@ fun Navigation() {
             composable(
                 route = Screen.Search.navigation,
             ) {
-                SearchScreen()
+                SearchScreen(navController)
             }
             composable(
                 route = Screen.Favourite.navigation,
@@ -52,6 +52,7 @@ fun Navigation() {
             tvShowDetail(navController)
             savedTvShow(navController)
             topRatedTvShow(navController)
+            searchedMovie(navController)
         }
 
     }

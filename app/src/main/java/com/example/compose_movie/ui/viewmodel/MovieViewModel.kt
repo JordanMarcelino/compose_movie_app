@@ -21,13 +21,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieViewModel @Inject constructor(
-    private val app : Application,
+    private val app: Application,
     private val getPopularMovieUseCase: GetPopularMovieUseCase,
     private val getNowPlayingUseCase: GetNowPlayingUseCase,
     private val saveMovieUseCase: SaveMovieUseCase,
     private val deleteMovieUseCase: DeleteMovieUseCase,
-    private val getSavedMovieUseCase: GetSavedMovieUseCase
-) : AndroidViewModel(app){
+    private val getSavedMovieUseCase: GetSavedMovieUseCase,
+    private val getSearchedMovieUseCase: GetSearchedMovieUseCase
+) : AndroidViewModel(app) {
 
     private val movies = mutableStateOf<List<Result>>(listOf())
     val movie = movies
@@ -35,23 +36,56 @@ class MovieViewModel @Inject constructor(
     private val _nowPlaying = mutableStateOf<List<Result>>(listOf())
     val nowPlaying = _nowPlaying
 
+    private val _searched = mutableStateOf<List<Result>>(listOf())
+    val searched = _searched
+
     var currentState = mutableStateOf<Resource<Any>>(Resource.Loading())
     var currentStateNowPlaying = mutableStateOf<Resource<Any>>(Resource.Loading())
+    var currentStateSearched = mutableStateOf<Resource<Any>>(Resource.Loading())
+
     var endReached = mutableStateOf(false)
     var endReachedNowPlaying = mutableStateOf(false)
+    var endReachedSearched = mutableStateOf(false)
 
     private var page = 1
     private var pageNowPlaying = 1
+    private var pageSearched = 1
 
-    init {
-        loadPopularMovie()
-        loadLatestMovie()
+    fun loadSearchedMovie(query: String) = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            if (isNetworkAvailable()) {
+                when (val response = getSearchedMovieUseCase.execute(pageSearched, query)) {
+                    is Resource.Success -> {
+                        endReachedSearched.value =
+                            pageSearched * 20 >= response.data!!.totalResults!!
+                        response.data.results?.forEach {
+                            it.apply {
+                                posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
+                            }
+                        }
+                        _searched.value = response.data.results!!
+                        currentStateSearched.value = Resource.Success("Success")
+                        pageSearched++
+                    }
+                    is Resource.Error -> {
+                        currentStateSearched.value = Resource.Error(response.message.toString())
+                    }
+                    else -> {
+                        currentStateSearched.value = Resource.Error(response.message.toString())
+                    }
+                }
+            } else {
+                currentStateSearched.value = Resource.Error("Internet is not available")
+            }
+        } catch (e: Exception) {
+            currentStateSearched.value = Resource.Error(e.message.toString())
+        }
     }
 
     fun loadPopularMovie() = viewModelScope.launch(Dispatchers.IO) {
         try {
-            if (isNetworkAvailable()){
-                when(val response = getPopularMovieUseCase.execute(page)){
+            if (isNetworkAvailable()) {
+                when (val response = getPopularMovieUseCase.execute(page)) {
                     is Resource.Success -> {
                         endReached.value = page * 20 >= response.data!!.totalResults!!
                         response.data.results?.forEach {
@@ -66,22 +100,25 @@ class MovieViewModel @Inject constructor(
                     is Resource.Error -> {
                         currentState.value = Resource.Error(response.message.toString())
                     }
-                    else -> { currentState.value = Resource.Error(response.message.toString()) }
+                    else -> {
+                        currentState.value = Resource.Error(response.message.toString())
+                    }
                 }
-            }else{
+            } else {
                 currentState.value = Resource.Error("Internet is not available")
             }
-        }catch (e : Exception){
+        } catch (e: Exception) {
             currentState.value = Resource.Error(e.message.toString())
         }
     }
 
     fun loadLatestMovie() = viewModelScope.launch(Dispatchers.IO) {
         try {
-            if (isNetworkAvailable()){
-                when(val response = getNowPlayingUseCase.execute(pageNowPlaying)){
+            if (isNetworkAvailable()) {
+                when (val response = getNowPlayingUseCase.execute(pageNowPlaying)) {
                     is Resource.Success -> {
-                        endReachedNowPlaying.value = pageNowPlaying * 20 >= response.data!!.totalResults!!
+                        endReachedNowPlaying.value =
+                            pageNowPlaying * 20 >= response.data!!.totalResults!!
                         response.data.results?.forEach {
                             it.apply {
                                 posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
@@ -94,26 +131,28 @@ class MovieViewModel @Inject constructor(
                     is Resource.Error -> {
                         currentStateNowPlaying.value = Resource.Error(response.message.toString())
                     }
-                    else -> { currentStateNowPlaying.value = Resource.Error(response.message.toString()) }
+                    else -> {
+                        currentStateNowPlaying.value = Resource.Error(response.message.toString())
+                    }
                 }
-            }else{
+            } else {
                 currentStateNowPlaying.value = Resource.Error("Internet is not available")
             }
-        }catch (e : Exception){
+        } catch (e: Exception) {
             currentStateNowPlaying.value = Resource.Error(e.message.toString())
         }
     }
 
-    fun saveMovie(movie : Movie) = viewModelScope.launch(Dispatchers.IO) {
+    fun saveMovie(movie: Movie) = viewModelScope.launch(Dispatchers.IO) {
         saveMovieUseCase.execute(movie)
     }
 
-    fun deleteMovie(movie : Movie) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteMovie(movie: Movie) = viewModelScope.launch(Dispatchers.IO) {
         deleteMovieUseCase.execute(movie)
     }
 
-    fun getSavedMovie() = flow{
-        getSavedMovieUseCase.execute().collect{
+    fun getSavedMovie() = flow {
+        getSavedMovieUseCase.execute().collect {
             emit(it)
         }
     }

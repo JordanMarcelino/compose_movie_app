@@ -33,6 +33,10 @@ fun PopularTvShowRow(
     tvShowViewModel: TvShowViewModel = hiltViewModel()
 ) {
 
+    LaunchedEffect(key1 = true){
+        tvShowViewModel.loadPopularTvShow()
+    }
+
     val tvShow by remember {
         tvShowViewModel.popularTvShow
     }
@@ -78,6 +82,10 @@ fun TvShowSection(
     navController: NavHostController,
     tvShowViewModel: TvShowViewModel = hiltViewModel(),
 ) {
+
+    LaunchedEffect(key1 = true){
+        tvShowViewModel.loadPopularTvShow()
+    }
 
     val currentState by remember {
         tvShowViewModel.currentState

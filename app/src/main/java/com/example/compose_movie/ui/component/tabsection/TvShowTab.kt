@@ -13,8 +13,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.compose_movie.ui.component.details.NowPlayingMovie
-import com.example.compose_movie.ui.component.details.movie.FavoriteMovie
 import com.example.compose_movie.ui.component.details.tvshow.FavoriteTvShow
 import com.example.compose_movie.ui.component.details.tvshow.TopRatedTvShowSection
 import com.example.compose_movie.ui.component.details.tvshow.TvShowSection

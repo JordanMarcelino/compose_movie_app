@@ -43,11 +43,6 @@ class TvShowViewModel @Inject constructor(
     private var page = 1
     private var pageTopRated = 1
 
-    init {
-        loadPopularTvShow()
-        loadTopRatedTvShow()
-    }
-
     fun loadPopularTvShow() = viewModelScope.launch(Dispatchers.IO) {
         try {
             if (isNetworkAvailable()){

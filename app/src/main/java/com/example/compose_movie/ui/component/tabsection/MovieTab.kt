@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.compose_movie.ui.component.details.movie.FavoriteMovie
 import com.example.compose_movie.ui.component.details.movie.MovieSection
-import com.example.compose_movie.ui.component.details.NowPlayingMovie
+import com.example.compose_movie.ui.component.details.movie.NowPlayingMovie
 
 @Composable
 fun ColumnScope.MovieTab(

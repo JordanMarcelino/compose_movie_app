@@ -27,6 +27,10 @@ fun TopRatedTvShowSection(
     tvShowViewModel: TvShowViewModel = hiltViewModel(),
 ) {
 
+    LaunchedEffect(key1 = true){
+        tvShowViewModel.loadTopRatedTvShow()
+    }
+
     val currentState by remember {
         tvShowViewModel.currentStateTopRated
     }
@@ -69,6 +73,10 @@ fun TopRatedTvShowRow(
     modifier: Modifier = Modifier,
     tvShowViewModel: TvShowViewModel = hiltViewModel()
 ) {
+
+    LaunchedEffect(key1 = true){
+        tvShowViewModel.loadTopRatedTvShow()
+    }
 
     val tvShow by remember {
         tvShowViewModel.topRated
