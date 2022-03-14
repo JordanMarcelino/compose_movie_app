@@ -36,7 +36,6 @@ import java.net.URLEncoder
 fun SearchedTvShow(
     navController: NavHostController,
     query : String,
-    modifier: Modifier = Modifier,
     tvShowViewModel: TvShowViewModel = hiltViewModel()
 ) {
 
@@ -48,7 +47,6 @@ fun SearchedTvShow(
     if (currentState is Resource.Success) {
         SearchedTvShowColumn(
             navController = navController,
-            modifier = modifier
         )
     } else if (currentState.message == "Internet is not available") {
         Box(
@@ -69,7 +67,6 @@ fun SearchedTvShow(
 @Composable
 fun SearchedTvShowColumn(
     navController: NavHostController,
-    modifier: Modifier = Modifier,
     tvShowViewModel: TvShowViewModel = hiltViewModel()
 ) {
 

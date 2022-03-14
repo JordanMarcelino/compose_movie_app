@@ -90,7 +90,6 @@ class MovieViewModel @Inject constructor(
                 when (val response = getSearchedMovieUseCase.execute(pageSearched, URLEncoder.encode(query, "utf-8"))) {
                     is Resource.Success -> {
                         endReachedSearched.value = pageSearched * 20 >= response.data!!.totalResults!!
-                        _query.value = query
                         response.data.results?.forEach {
                             it.apply {
                                 posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
@@ -98,8 +97,9 @@ class MovieViewModel @Inject constructor(
                         }
                         _searched.value = response.data.results!!
                         _searchedCached.value = _searched.value
+                        _query.value = query
                         currentStateSearched.value = Resource.Success("Success")
-                        pageSearched = 1
+                        pageSearched = if (pageSearched == 1) ++pageSearched else 1
                     }
                     is Resource.Error -> {
                         currentStateSearched.value = Resource.Error(response.message.toString())

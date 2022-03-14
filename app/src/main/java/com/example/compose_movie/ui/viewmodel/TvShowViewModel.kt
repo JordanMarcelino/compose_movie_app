@@ -90,7 +90,7 @@ class TvShowViewModel @Inject constructor(
                 when (val response = getSearchedTvShowUseCase.execute(pageSearched, URLEncoder.encode(query, "utf-8"))) {
                     is Resource.Success -> {
                         endReachedSearched.value = pageSearched * 20 >= response.data!!.totalResults!!
-                        _query.value = query
+
                         response.data.results?.forEach {
                             it.apply {
                                 posterPath = "https://image.tmdb.org/t/p/w500" + it.posterPath
@@ -99,7 +99,8 @@ class TvShowViewModel @Inject constructor(
                         _searched.value = response.data.results!!
                         _searchedCached.value = _searched.value
                         currentStateSearched.value = Resource.Success("Success")
-                        pageSearched = 1
+                        _query.value = query
+                        pageSearched = if (pageSearched == 1) ++pageSearched else 1
                     }
                     is Resource.Error -> {
                         currentStateSearched.value = Resource.Error(response.message.toString())

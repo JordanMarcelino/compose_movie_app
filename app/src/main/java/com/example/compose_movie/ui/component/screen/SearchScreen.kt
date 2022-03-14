@@ -49,6 +49,7 @@ fun SearchScreen(
         TabSection(navController = navController) {
             index = it
         }
+        Spacer(modifier = Modifier.height(10.dp))
         when (index) {
             0 -> {
                 SearchedMovie(

@@ -40,6 +40,7 @@ fun MovieDetails(
     overview: String,
     id: Int,
     adult: Boolean,
+    searched : Boolean,
     movieRow: @Composable () -> Unit,
     movieViewModel: MovieViewModel = hiltViewModel()
 ) {
@@ -90,7 +91,7 @@ fun MovieDetails(
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     Text(
-                        text = "Other Movie",
+                        text = if (searched) "" else "Other Movies",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 8.dp),

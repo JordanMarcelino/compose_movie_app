@@ -9,10 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.compose_movie.ui.component.details.movie.NowPlayingMovieRow
-import com.example.compose_movie.ui.component.details.movie.MovieDetails
-import com.example.compose_movie.ui.component.details.movie.PopularMovieRow
-import com.example.compose_movie.ui.component.details.movie.SavedMovieRow
+import com.example.compose_movie.ui.component.details.movie.*
 import com.example.compose_movie.ui.component.details.tvshow.PopularTvShowRow
 import com.example.compose_movie.ui.component.details.tvshow.SavedTvShowRow
 import com.example.compose_movie.ui.component.details.tvshow.TopRatedTvShowRow
@@ -77,6 +74,7 @@ fun NavGraphBuilder.searchedMovie(
             date = date.toString(),
             overview = overview.toString(),
             id = id,
+            searched = true,
             movieRow = {
 
             },
@@ -141,6 +139,7 @@ fun NavGraphBuilder.searchedTvShow(
             tvShowRow = {
 
             },
+            searched = true,
         )
     }
 }
@@ -204,6 +203,7 @@ fun NavGraphBuilder.topRatedTvShow(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             },
+            searched = false,
         )
     }
 }
@@ -267,6 +267,7 @@ fun NavGraphBuilder.savedTvShow(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             },
+            searched = false,
         )
     }
 }
@@ -330,6 +331,7 @@ fun NavGraphBuilder.tvShowDetail(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             },
+            searched = false,
         )
     }
 }
@@ -399,7 +401,8 @@ fun NavGraphBuilder.savedMovie(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             },
-            adult = adult
+            adult = adult,
+            searched = false,
         )
     }
 }
@@ -469,7 +472,8 @@ fun NavGraphBuilder.nowPlayingMovie(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             },
-            adult = adult
+            adult = adult,
+            searched = false,
         )
     }
 }
@@ -539,7 +543,8 @@ fun NavGraphBuilder.movieDetail(
                     Modifier.padding(horizontal = 8.dp)
                 )
             },
-            adult = adult
+            adult = adult,
+            searched = false,
         )
     }
 }

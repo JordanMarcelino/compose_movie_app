@@ -40,6 +40,7 @@ fun TvShowDetails(
     date: String,
     overview: String,
     id: Int,
+    searched : Boolean,
     tvShowRow: @Composable () -> Unit,
     tvShowViewModel: TvShowViewModel = hiltViewModel()
 ) {
@@ -88,7 +89,7 @@ fun TvShowDetails(
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     Text(
-                        text = "Other Movie",
+                        text = if (searched) "" else "Other Tv Show",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 8.dp),
