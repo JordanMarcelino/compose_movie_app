@@ -46,25 +46,6 @@ fun FavouriteScreen(
                         .padding(horizontal = 8.dp),
                     color = Color.White
                 )
-                Text(
-                    text = "See All",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(
-                            Color(
-                                0xFF0a9396
-                            ).copy(alpha = 0.55f)
-                        )
-                        .padding(8.dp)
-                        .clickable {
-
-                        },
-                    color = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center
-                )
             }
             Spacer(modifier = Modifier.height(8.dp))
             FavoriteMovie(navController = navController)
@@ -83,25 +64,6 @@ fun FavouriteScreen(
                     modifier = Modifier
                         .padding(horizontal = 8.dp),
                     color = Color.White
-                )
-                Text(
-                    text = "See All",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(
-                            Color(
-                                0xFF0a9396
-                            ).copy(alpha = 0.55f)
-                        )
-                        .padding(8.dp)
-                        .clickable {
-
-                        },
-                    color = MaterialTheme.colors.primary,
-                    textAlign = TextAlign.Center
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
